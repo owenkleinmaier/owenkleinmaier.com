@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owen Kleinmaier</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #f5f4f1;
+            --bg-tertiary: #ffffff;
+            --text-primary: #2c2c2c;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent-primary: #24637e;
+            --accent-secondary: #2f7a99;
+            --border-light: #e8e5e0;
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-theme {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #242424;
+            --bg-tertiary: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --accent-primary: #24637e;
+            --accent-secondary: #2f7a99;
+            --border-light: #404040;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-medium: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 14px;
+            font-weight: 400;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 100;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            padding: 8px;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            transform: scale(1.1);
+        }
+
+        .nav {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 24px;
+            background: var(--bg-tertiary);
+            padding: 12px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 2px 16px var(--shadow-light);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 400;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-primary);
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 120px;
+            gap: 40px;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .hero-name {
+            color: var(--accent-primary);
+            font-size: 56px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .hero-name:hover {
+            opacity: 0.8;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            font-weight: 300;
+            min-height: 32px;
+        }
+
+        .cursor {
+            animation: blink 1s infinite;
+            color: var(--accent-primary);
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .resume-btn {
+            padding: 12px 24px;
+            background: var(--accent-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(36, 99, 126, 0.2);
+        }
+
+        .resume-btn:hover {
+            background: var(--accent-secondary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(36, 99, 126, 0.3);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 20px;
+            transition: all 0.2s ease;
+            padding: 8px;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        .hero-illustration {
+            flex: 0 0 400px;
+            height: 400px;
+            position: relative;
+            background: url('./hero-illustration.png') center/contain no-repeat;
+        }
+
+        .container {
+            max-width: none;
+            margin: 0;
+            padding: 60px 120px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+            letter-spacing: -0.01em;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 500;
+        }
+
+        .skills-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 24px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 40px;
+        }
+
+        .skills-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .skills-search {
+            position: relative;
+            width: 240px;
+        }
+
+        .skills-search input {
+            width: 100%;
+            padding: 8px 36px 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .skills-search input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(36, 99, 126, 0.1);
+        }
+
+        .skills-search i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .skill-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-medium);
+            border-color: var(--accent-primary);
+        }
+
+        .skill-icon {
+            font-size: 24px;
+            color: var(--accent-primary);
+        }
+
+        .skill-item span {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .projects-grid {
+            display: grid;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project {
+            padding: 24px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .project:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--shadow-medium);
+            border-color: var(--accent-primary);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 16px;
+        }
+
+        .project-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .project-link {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border: 1px solid var(--border-light);
+            padding: 4px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            background: var(--bg-secondary);
+        }
+
+        .project-link:hover {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            background: var(--bg-primary);
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.6;
+            font-size: 13px;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-tag {
+            font-size: 10px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid var(--border-light);
+        }
+
+        .tech-tag i {
+            font-size: 10px;
+            color: var(--accent-primary);
+        }
+
+        .contact {
+            border-top: 1px solid var(--border-light);
+            padding-top: 40px;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            font-size: 13px;
+        }
+
+        .contact-link:hover {
+            color: var(--accent-primary);
+        }
+
+        .easter-egg-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .easter-egg-content {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 8px 32px var(--shadow-medium);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .easter-egg-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .easter-egg-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .easter-egg-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .easter-egg-icon {
+            color: var(--accent-primary);
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .easter-egg-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .easter-egg-close:hover {
+            color: var(--text-primary);
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 1;
+        }
+
+        .scroll-arrow {
+            font-size: 20px;
+            color: var(--accent-primary);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .scroll-indicator {
+                display: none;
+            }
+
+            .hero {
+                flex-direction: column;
+                padding: 40px 24px;
+                gap: 40px;
+                text-align: center;
+                height: auto;
+                min-height: 100vh;
+                justify-content: center;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .hero-name {
+                font-size: 42px;
+            }
+
+            .hero-subtitle {
+                font-size: 20px;
+            }
+
+            .hero-illustration {
+                flex: none;
+                width: 300px;
+                height: 300px;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .skills-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .skills-search {
+                width: 100%;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 12px;
+            }
+
+            .nav {
+                position: static;
+                transform: none;
+                margin-bottom: 40px;
+                justify-content: center;
+            }
+
+            .theme-toggle {
+                top: 16px;
+                right: 16px;
+            }
+
+            .container {
+                padding: 40px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .easter-egg-content {
+                padding: 24px;
+                margin: 20px;
+            }
+
+            .easter-egg-title {
+                font-size: 16px;
+            }
+
+            .easter-egg-item {
+                font-size: 12px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .social-links {
+                order: -1;
+            }
+
+            .project-header {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .hero {
+                padding: 40px 16px;
+            }
+
+            .container {
+                padding: 40px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+
+    <nav class="nav">
+        <a href="#about" class="nav-link">about</a>
+        <a href="#skills" class="nav-link">skills</a>
+        <a href="#projects" class="nav-link">projects</a>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                hi, my name is<br>
+                <span class="hero-name" onclick="showEasterEgg()">owen.</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                i am <span id="typed-text"></span><span class="cursor">|</span>
+            </p>
+
+            <div class="hero-actions">
+                <a href="resume.pdf" target="_blank" class="resume-btn">my resume</a>
+                <div class="social-links">
+                    <a href="http://www.linkedin.com/in/owenkleinmaier/" target="_blank" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/owenkleinmaier" target="_blank" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="mailto:owenkleinmaier@gmail.com" aria-label="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-illustration">
+        </div>
+    </header>
+
+    <div class="scroll-indicator" id="scroll-indicator">
+        <i class="fas fa-chevron-down scroll-arrow"></i>
+    </div>
+
+    <div class="easter-egg-modal" id="easter-egg-modal" onclick="hideEasterEgg()">
+        <div class="easter-egg-content" onclick="event.stopPropagation()">
+            <button class="easter-egg-close" onclick="hideEasterEgg()">×</button>
+            <h3 class="easter-egg-title">what owen's up to right now</h3>
+            
+            <div class="easter-egg-item">
+                <i class="fas fa-headphones easter-egg-icon"></i>
+                <span>Currently listening: "Bohemian Rhapsody" by Queen</span>
+            </div>
+            
+            <div class="easter-egg-item">
+                <i class="fas fa-laptop-code easter-egg-icon"></i>
+                <span>Working on: Personal Portfolio Website</span>
+            </div>
+            
+            <div class="easter-egg-item">
+                <i class="fas fa-book easter-egg-icon"></i>
+                <span>Reading: "Clean Code" by Robert Martin</span>
+            </div>
+            
+            <div class="easter-egg-item">
+                <i class="fas fa-gamepad easter-egg-icon"></i>
+                <span>Playing: Rocket League</span>
+            </div>
+            
+            <div class="easter-egg-item">
+                <i class="fas fa-search easter-egg-icon"></i>
+                <span>Researching: Machine Learning in Healthcare</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <section class="section" id="about">
+            <h2 class="section-title">about me</h2>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        Hi! I'm Owen, a Junior at Indiana University Bloomington studying 
+                        Computer Science (concentrated in artificial intelligence) with a minor 
+                        in data science. I currently serve as President of Google Developer Student 
+                        Clubs @ IU and work as an Undergraduate Instructor for Intro to AI, supporting 
+                        100+ students in core AI concepts. I'm passionate about software engineering, 
+                        web development, artificial intelligence, and machine learning.
+                    </p>
+                    <p>
+                        As GDSC President, I lead weekly meetings and organize 20+ tech and career-focused 
+                        events for our 400+ member community. I also co-founded and organize the official 
+                        Luddy Hackathon, growing it from a club-run event to a university-sponsored 
+                        competition with 300+ attendees and $10,000+ in sponsorship funding from companies 
+                        like ServiceNow and Google.
+                    </p>
+                </div>
+                <div class="about-text">
+                    <p>
+                        This past year, I've gained valuable industry experience as a Software 
+                        Engineering Intern at Shopwave in London, where I independently developed 
+                        a full-stack BI dashboard used by major clients like Deliveroo across 500+ 
+                        store locations. I'm also currently working as an Undergraduate Instructor 
+                        for Intro to AI, supporting 100+ students in core AI concepts.
+                    </p>
+                    <p>
+                        When I'm not coding, I love to cook, play guitar, go on hikes, and explore 
+                        new music. I'm even pursuing a Certificate of Rock Music History through 
+                        IU's Jacobs School of Music. I love to travel and discover new places, 
+                        hoping to visit every continent in my lifetime. <span class="highlight">I'm 
+                        currently seeking internships for Summer 2026, so feel free to reach out!</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="skills">
+            <h2 class="section-title">my skills</h2>
+            
+            <div class="skills-controls">
+                <div class="skills-filters">
+                    <button class="filter-btn active" onclick="filterSkills('all')">All Skills</button>
+                    <button class="filter-btn" onclick="filterSkills('languages')">Languages</button>
+                    <button class="filter-btn" onclick="filterSkills('frameworks')">Frameworks</button>
+                    <button class="filter-btn" onclick="filterSkills('ml-ai')">ML & AI</button>
+                    <button class="filter-btn" onclick="filterSkills('tools')">Tools</button>
+                </div>
+                <div class="skills-search">
+                    <input type="text" id="skills-search" placeholder="Search skills..." onkeyup="searchSkills()">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+            
+            <div class="skills-grid" id="skills-grid">
+                <div class="skill-item" data-category="languages">
+                    <i class="fab fa-js skill-icon"></i>
+                    <span>JavaScript</span>
+                </div>
+                <div class="skill-item" data-category="languages">
+                    <i class="fab fa-python skill-icon"></i>
+                    <span>Python</span>
+                </div>
+                <div class="skill-item" data-category="languages">
+                    <i class="fab fa-java skill-icon"></i>
+                    <span>Java</span>
+                </div>
+                <div class="skill-item" data-category="languages">
+                    <i class="fas fa-code skill-icon"></i>
+                    <span>C++</span>
+                </div>
+                <div class="skill-item" data-category="languages">
+                    <i class="fab fa-swift skill-icon"></i>
+                    <span>Swift</span>
+                </div>
+                <div class="skill-item" data-category="languages">
+                    <i class="fas fa-database skill-icon"></i>
+                    <span>MySQL</span>
+                </div>
+                <div class="skill-item" data-category="languages">
+                    <i class="fas fa-leaf skill-icon"></i>
+                    <span>MongoDB</span>
+                </div>
+                <div class="skill-item" data-category="languages">
+                    <i class="fab fa-html5 skill-icon"></i>
+                    <span>HTML</span>
+                </div>
+                <div class="skill-item" data-category="languages">
+                    <i class="fab fa-css3-alt skill-icon"></i>
+                    <span>CSS</span>
+                </div>
+
+                <div class="skill-item" data-category="frameworks">
+                    <i class="fab fa-react skill-icon"></i>
+                    <span>React</span>
+                </div>
+                <div class="skill-item" data-category="frameworks">
+                    <i class="fab fa-node-js skill-icon"></i>
+                    <span>Node.js</span>
+                </div>
+                <div class="skill-item" data-category="frameworks">
+                    <i class="fas fa-fire skill-icon"></i>
+                    <span>Firebase</span>
+                </div>
+                <div class="skill-item" data-category="frameworks">
+                    <i class="fas fa-arrow-right skill-icon"></i>
+                    <span>Next.js</span>
+                </div>
+                <div class="skill-item" data-category="frameworks">
+                    <i class="fas fa-wind skill-icon"></i>
+                    <span>Tailwind</span>
+                </div>
+                <div class="skill-item" data-category="frameworks">
+                    <i class="fab fa-bootstrap skill-icon"></i>
+                    <span>Bootstrap</span>
+                </div>
+                <div class="skill-item" data-category="frameworks">
+                    <i class="fas fa-mobile-alt skill-icon"></i>
+                    <span>Flutter</span>
+                </div>
+                <div class="skill-item" data-category="frameworks">
+                    <i class="fab fa-git-alt skill-icon"></i>
+                    <span>Git</span>
+                </div>
+
+                <div class="skill-item" data-category="ml-ai">
+                    <i class="fas fa-brain skill-icon"></i>
+                    <span>PyTorch</span>
+                </div>
+                <div class="skill-item" data-category="ml-ai">
+                    <i class="fas fa-book skill-icon"></i>
+                    <span>Jupyter</span>
+                </div>
+                <div class="skill-item" data-category="ml-ai">
+                    <i class="fab fa-r-project skill-icon"></i>
+                    <span>R</span>
+                </div>
+                <div class="skill-item" data-category="ml-ai">
+                    <i class="fas fa-chart-line skill-icon"></i>
+                    <span>Matplotlib</span>
+                </div>
+                <div class="skill-item" data-category="ml-ai">
+                    <i class="fas fa-table skill-icon"></i>
+                    <span>Pandas</span>
+                </div>
+                <div class="skill-item" data-category="ml-ai">
+                    <i class="fas fa-calculator skill-icon"></i>
+                    <span>NumPy</span>
+                </div>
+                <div class="skill-item" data-category="ml-ai">
+                    <i class="fas fa-robot skill-icon"></i>
+                    <span>Scikit-learn</span>
+                </div>
+                <div class="skill-item" data-category="ml-ai">
+                    <i class="fas fa-trophy skill-icon"></i>
+                    <span>Kaggle</span>
+                </div>
+
+                <div class="skill-item" data-category="tools">
+                    <i class="fab fa-figma skill-icon"></i>
+                    <span>Figma</span>
+                </div>
+                <div class="skill-item" data-category="tools">
+                    <i class="fas fa-laptop-code skill-icon"></i>
+                    <span>VS Code</span>
+                </div>
+                <div class="skill-item" data-category="tools">
+                    <i class="fab fa-docker skill-icon"></i>
+                    <span>Docker</span>
+                </div>
+                <div class="skill-item" data-category="tools">
+                    <i class="fas fa-terminal skill-icon"></i>
+                    <span>Terminal</span>
+                </div>
+                <div class="skill-item" data-category="tools">
+                    <i class="fas fa-palette skill-icon"></i>
+                    <span>Illustrator</span>
+                </div>
+                <div class="skill-item" data-category="tools">
+                    <i class="fas fa-image skill-icon"></i>
+                    <span>Photoshop</span>
+                </div>
+                <div class="skill-item" data-category="tools">
+                    <i class="fab fa-android skill-icon"></i>
+                    <span>Android Studio</span>
+                </div>
+                <div class="skill-item" data-category="tools">
+                    <i class="fas fa-tasks skill-icon"></i>
+                    <span>Jira</span>
+                </div>
+                <div class="skill-item" data-category="tools">
+                    <i class="fab fa-github skill-icon"></i>
+                    <span>GitHub</span>
+                </div>
+                <div class="skill-item" data-category="tools">
+                    <i class="fab fa-slack skill-icon"></i>
+                    <span>Slack</span>
+                </div>
+                <div class="skill-item" data-category="tools">
+                    <i class="fas fa-sticky-note skill-icon"></i>
+                    <span>Notion</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="projects">
+            <h2 class="section-title">projects</h2>
+            
+            <div class="projects-grid">
+                <div class="project">
+                    <div class="project-header">
+                        <h3 class="project-title">Youlists - AI Playlist Generator</h3>
+                        <a href="https://youlists.vercel.app" class="project-link" target="_blank">live demo</a>
+                    </div>
+                    <p class="project-description">
+                        Full-stack web app integrating Spotify API and OpenAI to generate dynamic playlists based on user prompts and listening preferences.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag"><i class="fab fa-react"></i> React</span>
+                        <span class="tech-tag"><i class="fas fa-code"></i> TypeScript</span>
+                        <span class="tech-tag"><i class="fas fa-fire"></i> Firebase</span>
+                        <span class="tech-tag"><i class="fas fa-wind"></i> Tailwind</span>
+                        <span class="tech-tag"><i class="fas fa-brain"></i> OpenAI</span>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <div class="project-header">
+                        <h3 class="project-title">Invasive Plant Classifier</h3>
+                        <a href="https://github.com/owenkleinmaier" class="project-link" target="_blank">github</a>
+                    </div>
+                    <p class="project-description">
+                        CNN model with transfer learning to distinguish invasive vs. non-invasive plant species in Indiana, supporting local conservation efforts.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag"><i class="fab fa-python"></i> Python</span>
+                        <span class="tech-tag"><i class="fas fa-brain"></i> TensorFlow</span>
+                        <span class="tech-tag"><i class="fas fa-table"></i> Pandas</span>
+                        <span class="tech-tag"><i class="fas fa-robot"></i> Scikit-learn</span>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <div class="project-header">
+                        <h3 class="project-title">March Madness Predictor</h3>
+                        <a href="https://www.kaggle.com/code/owenkleinmaier/march-madness-predictor" class="project-link" target="_blank">kaggle</a>
+                    </div>
+                    <p class="project-description">
+                        Machine learning model to predict NCAA basketball tournament outcomes using historical data and team statistics.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag"><i class="fab fa-python"></i> Python</span>
+                        <span class="tech-tag"><i class="fas fa-robot"></i> Scikit-learn</span>
+                        <span class="tech-tag"><i class="fas fa-table"></i> Pandas</span>
+                        <span class="tech-tag"><i class="fas fa-book"></i> Jupyter</span>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <div class="project-header">
+                        <h3 class="project-title">Easy Bold Reader</h3>
+                        <a href="https://chromewebstore.google.com/detail/easy-bold-reader/oakpjlnlggmfdmdllhpdnbekgikjjaaj" class="project-link" target="_blank">chrome store</a>
+                    </div>
+                    <p class="project-description">
+                        Chrome extension that enhances readability by emphasizing key text for better focus and comprehension.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag"><i class="fab fa-js"></i> JavaScript</span>
+                        <span class="tech-tag"><i class="fab fa-html5"></i> HTML</span>
+                        <span class="tech-tag"><i class="fab fa-css3-alt"></i> CSS</span>
+                        <span class="tech-tag"><i class="fab fa-chrome"></i> Chrome API</span>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <div class="project-header">
+                        <h3 class="project-title">Personal Website</h3>
+                        <a href="https://www.owenkleinmaier.com" class="project-link" target="_blank">view site</a>
+                    </div>
+                    <p class="project-description">
+                        Portfolio website showcasing skills, projects, and experiences with modern design and dark mode.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag"><i class="fab fa-react"></i> React</span>
+                        <span class="tech-tag"><i class="fas fa-code"></i> TypeScript</span>
+                        <span class="tech-tag"><i class="fas fa-wind"></i> Tailwind</span>
+                    </div>
+                </div>
+
+                <div class="project">
+                    <div class="project-header">
+                        <h3 class="project-title">Age Calculator</h3>
+                        <a href="https://agecalculat0r.netlify.app/" class="project-link" target="_blank">live demo</a>
+                    </div>
+                    <p class="project-description">
+                        Interactive web app that calculates precise age based on birth date with clean animations.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag"><i class="fab fa-html5"></i> HTML</span>
+                        <span class="tech-tag"><i class="fab fa-css3-alt"></i> CSS</span>
+                        <span class="tech-tag"><i class="fab fa-js"></i> JavaScript</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact" id="contact">
+            <h2 class="section-title">Get in touch</h2>
+            <div class="contact-links">
+                <a href="mailto:owenkleinmaier@gmail.com" class="contact-link">owenkleinmaier@gmail.com</a>
+                <a href="https://github.com/owenkleinmaier" class="contact-link" target="_blank">github</a>
+                <a href="http://www.linkedin.com/in/owenkleinmaier/" class="contact-link" target="_blank">linkedin</a>
+                <a href="/resume.pdf" class="contact-link" target="_blank">resume</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const phrases = [
+            "an aspiring full-stack developer.",
+            "a computer science student."
+        ];
+        
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typingSpeed = 100;
+        
+        function typeText() {
+            const currentPhrase = phrases[phraseIndex];
+            const typedElement = document.getElementById('typed-text');
+            
+            if (isDeleting) {
+                typedElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+                typingSpeed = 50;
+            } else {
+                typedElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+                typingSpeed = 100;
+            }
+            
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                setTimeout(() => {
+                    isDeleting = true;
+                }, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+            }
+            
+            setTimeout(typeText, typingSpeed);
+        }
+        
+        typeText();
+        
+        function showEasterEgg() {
+            document.getElementById('easter-egg-modal').style.display = 'flex';
+        }
+        
+        function hideEasterEgg() {
+            document.getElementById('easter-egg-modal').style.display = 'none';
+        }
+        
+        let hasScrolled = false;
+        window.addEventListener('scroll', () => {
+            if (!hasScrolled && window.scrollY > 50) {
+                hasScrolled = true;
+                document.getElementById('scroll-indicator').style.display = 'none';
+            }
+        });
+        
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const icon = document.getElementById('theme-icon');
+            const isDark = document.body.classList.contains('dark-theme');
+            
+            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+        
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.getElementById('theme-icon').className = 'fas fa-sun';
+        }
+        
+        function filterSkills(category) {
+            const skills = document.querySelectorAll('.skill-item');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            skills.forEach(skill => {
+                if (category === 'all' || skill.dataset.category === category) {
+                    skill.style.display = 'flex';
+                } else {
+                    skill.style.display = 'none';
+                }
+            });
+        }
+        
+        function searchSkills() {
+            const searchTerm = document.getElementById('skills-search').value.toLowerCase();
+            const skills = document.querySelectorAll('.skill-item');
+            
+            skills.forEach(skill => {
+                const skillName = skill.querySelector('span').textContent.toLowerCase();
+                if (skillName.includes(searchTerm)) {
+                    skill.style.display = 'flex';
+                } else {
+                    skill.style.display = 'none';
+                }
+            });
+        }
+        
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
