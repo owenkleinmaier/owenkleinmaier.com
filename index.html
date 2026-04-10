@@ -783,7 +783,7 @@
         <a href="#about" class="nav-link">about</a>
         <a href="#skills" class="nav-link">skills</a>
         <a href="#projects" class="nav-link">projects</a>
-        <a href="#blogs" class="nav-link">blogs</a>
+        <a href="#blog" class="nav-link">blog</a>
       </div>
       <button class="nav-theme-toggle" onclick="toggleTheme()">
         <i class="fas fa-moon" id="nav-theme-icon"></i>
@@ -1343,18 +1343,25 @@
         </div>
       </section>
 
-      <section class="section" id="blogs">
-        <h2 class="section-title">writing</h2>
+      <section class="section" id="blog">
+        <h2 class="section-title">blog</h2>
 
         <div class="projects-grid">
-          <div class="project" style="cursor:pointer;" onclick="window.location='/blogs/black-box-ai.html'">
+          <div
+            class="project"
+            style="cursor: pointer"
+            onclick="window.location = '/blogs/black-box-ai.html'"
+          >
             <div class="project-header">
               <h3 class="project-title">We Don't Know What Our AI Is Doing</h3>
-              <a href="/blogs/black-box-ai.html" class="project-link" onclick="event.stopPropagation()">read →</a>
+              <a
+                href="/blogs/black-box-ai.html"
+                class="project-link"
+                onclick="event.stopPropagation()"
+                >read →</a
+              >
             </div>
-            <p class="project-description">
-              On the black box problem in AI — why explainability and interpretability are different things, and why it matters that we're deploying systems we can't open up and look inside.
-            </p>
+            <p class="project-description">on the blackbox problem in ai</p>
             <div class="tech-stack">
               <span class="tech-tag">March 2026</span>
               <span class="tech-tag">opinion</span>
