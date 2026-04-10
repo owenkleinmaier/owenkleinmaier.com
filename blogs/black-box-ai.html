@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>We Don't Know What Our AI Is Doing</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --teal: #24637e;
+      --teal-light: #2d7a9a;
+      --teal-dark: #1b4d63;
+      --bg: #f5f0eb;
+      --bg-alt: #ede7e0;
+      --text: #2c2c2c;
+      --text-muted: #6b6560;
+      --accent-line: #24637e33;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    header {
+      padding: 3rem 2rem 2rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .breadcrumb a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    .breadcrumb span {
+      margin: 0 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--teal-dark);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--accent-line);
+    }
+
+    .tag {
+      background: var(--teal);
+      color: var(--bg);
+      padding: 0.15rem 0.6rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    article {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+    }
+
+    article p {
+      font-size: 0.88rem;
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+    }
+
+    article p:first-of-type::first-letter {
+      font-size: 2.8rem;
+      float: left;
+      line-height: 1;
+      margin-right: 0.5rem;
+      margin-top: 0.1rem;
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .callout {
+      border-left: 3px solid var(--teal);
+      padding: 1.2rem 1.5rem;
+      margin: 2rem 0;
+      background: var(--bg-alt);
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--teal-dark);
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--teal-dark);
+      margin: 2.5rem 0 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    a {
+      color: var(--teal);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    a:hover {
+      color: var(--teal-light);
+    }
+
+    .references {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--accent-line);
+    }
+
+    .references h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .references ol {
+      list-style: none;
+      counter-reset: ref;
+      padding: 0;
+    }
+
+    .references li {
+      counter-increment: ref;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+      padding-left: 2rem;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .references li::before {
+      content: "[" counter(ref) "]";
+      position: absolute;
+      left: 0;
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    footer {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--accent-line);
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.4rem; }
+      article p { font-size: 0.84rem; }
+      header, article { padding-left: 1.2rem; padding-right: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="noise-overlay"></div>
+
+<header>
+  <div class="breadcrumb">
+    <a href="/">home</a><span>/</span><a href="/blogs">blogs</a><span>/</span>black-box-ai
+  </div>
+  <h1>We Don't Know What Our AI Is Doing</h1>
+  <div class="meta">
+    <span class="tag">opinion</span>
+    <span>March 2026</span>
+    <span>~6 min read</span>
+  </div>
+</header>
+
+<article>
+
+  <p>I've been thinking about this a lot lately and wanted to look more into it. We are putting AI systems into hospitals, courtrooms, hiring pipelines, loan approvals, and a bunch of other places where the output actually changes someone's life, and the weird part is that nobody involved really knows how these models arrive at their answers. I don't mean that in a hand-wavy "well it's complicated" sense that engineers sometimes do. I mean the engineers who built the model cannot look at a given output and trace back through the reasoning that produced it. The data goes in, some math happens across a few billion parameters, and a number comes out the other end (just a bit simplified:)). Even modern reasoning models cannot fully explain WHY they specifically chose that answer, and I find this very alarming.</p>
+
+  <p>This is what gets called the black box problem. It's been written about for years at this point, and I read a bunch of the literature on it in class last year (we spent a week on Cynthia Rudin's paper, which I'll get into). But the thing that keeps nagging at me is that AI deployment is moving so much faster than the conversation about what we don't understand. The gap between what we can build and what we can explain is getting wider, not narrower, and it feels like most people in the industry have just quietly accepted the tradeoff without really sitting with how weird it is. There are obvious structural reasons for this, capitalism, competitive pressure and the near-total absence of policy, but I'll save that thread for another time.</p>
+
+  <h2>the accuracy thing</h2>
+
+  <p>The standard defense of black-box models is that they perform better, and to be fair that's often true. Deep neural networks regularly outperform simpler models on most benchmarks. In medical imaging specifically, there's been work showing black-box models matching or beating clinician-level accuracy on mammogram screening, skin cancer classification, diabetic retinopathy detection, and a few other things (Prince and Savulescu cover this well in their 2025 paper). I don't want to wave that away because it's impressive and it matters and its such a huge step in the right direction.</p>
+
+  <p>But here's where I always get stuck. Accuracy on a held-out test set and trustworthiness in the real world are really different things, and we talk about them like they're interchangeable when they're not. A model can score 97% on your evaluation metrics and still be latching onto some spurious correlation in the training data, or encoding a bias that nobody thought to check for, or arriving at the right answer for a completely wrong reason. The whole problem with a black box is that you can't open it up and look, so you do not know which of those scenarios you're in. You're just looking at the accuracy number on a dashboard and calling it good enough, which feels like a strange amount of trust to place in something you fundamentally do not understand.</p>
+
+  <div class="callout">
+    Rudin made this point in 2019: if an explanation of a black box were actually complete and faithful to what the model does internally, it would just be the model. You wouldn't need the black box. The very fact that you need a separate explanation tells you it's an approximation, and approximations can be wrong in ways you won't catch.
+  </div>
+
+  <h2>explaining versus understanding</h2>
+
+  <p>Cynthia Rudin published this paper in Nature Machine Intelligence in 2019 called "Stop Explaining Black Box Machine Learning Models for High Stakes Decisions and Use Interpretable Models Instead," which, credit to her, is about as clear a title as you'll ever see on an academic paper. We read it in my KBAI course and it stuck with me more than most things I've read in school.</p>
+
+  <p>Her central point is that there's a real difference between explainability and interpretability, and the field has been pouring energy into the wrong one. Explainability is what you get when you build a black-box model and then use a second tool (something like LIME or SHAP or a saliency map) to try to approximate what the first model did after the fact. Those tools are useful for debugging and building intuition about model behavior, and I don't think anyone should stop using them. But they are approximations. They're a second model's best guess about what the first model was doing, and that guess will always be incomplete because if it weren't, you'd just use the explanation instead of the original model.</p>
+
+  <p>Interpretability is what you get when the model itself is designed so that a human can follow its reasoning directly. Rudin's argument is that for high-stakes decisions, we should default to interpretable models and only reach for black boxes when we can show that interpretable approaches can't do the job. She's also demonstrated in multiple domains that when researchers actually try to build competitive interpretable models, they often come surprisingly close to black-box performance. That complicates the whole story that opacity is just the price you pay for accuracy.</p>
+
+  <p>The problem is that the industry doesn't reward that kind of work (at least right now). Nobody gets funded for building something slightly less flashy that you can actually understand. There's no leaderboard for transparency. The incentives all point toward bigger models and better benchmark scores, and I don't see that changing on its own.</p>
+
+  <h2>where this can be a problem</h2>
+
+  <p>The COMPAS recidivism system is the example that comes up in every conversation about this, and even though it's kind of overused at this point, it's worth going over because of how stark it is. COMPAS is a proprietary black-box tool used in U.S. courtrooms to predict whether a defendant will reoffend. Judges use its risk score as a factor in sentencing. ProPublica reported years ago that the system was biased against Black defendants, assigning them higher risk scores even when controlling for prior offenses. And because the model is proprietary and opaque, there is no real way for a defendant or their lawyer to challenge the logic behind the score. You get a number, it affects your sentence, and the reasoning behind it is locked inside a company's product. We designed that system and then put it into courtrooms knowing all of this.</p>
+
+  <p>Healthcare is the other domain where I find this really weird. I came across a paper from IU's own CS department at Luddy (Budhkar et al., 2025) that surveys explainability techniques in bioinformatics, and the honest conclusion is that we're still pretty far from having reliable tools for understanding what these models do in medical contexts. Black-box models are already being used in genomics and medical imaging, and the question of what happens when a model flags a patient as high-risk and the doctor can't interrogate why is not hypothetical anymore. Medicine requires so much context that a model can't have: a patient's living situation, their preferences, what they're actually willing to do about a diagnosis. If the doctor just follows the number because the accuracy metrics look good, we've effectively outsourced clinical judgment to a system nobody can look inside. I don't think that's what anyone wanted when they started working on AI in healthcare, but it's where we've ended up.</p>
+
+  <h2>regulation is trying (maybe not enough)</h2>
+
+  <p>The EU AI Act went into force in 2024 and it's the most serious regulatory attempt at this so far. It classifies AI systems by risk level and requires that high-risk applications (which includes healthcare and criminal justice) be "sufficiently transparent." The catch is that what "sufficiently transparent" means in engineering terms is still an open question, and will be for a while. Pavlidis (2025) has a good paper analyzing the Act's explainability framework, and his conclusion is basically that the intent is right but the implementation details are going to be messy and contested for years.</p>
+
+  <p>On the research side, there are some things happening that I find encouraging. Anthropic published work in 2024 using dictionary learning and sparse feature extraction to locate how concepts are represented inside Claude. They showed you could find actual human-understandable features in a large model, things like a "Golden Gate Bridge" feature and a "code bugs" feature, though the technique is still hard to scale. DeepMind open-sourced interpretability tooling with their Gemma Scope project. The mechanistic interpretability community is still small, but it's pulling in serious people.</p>
+
+  <p>Finally, Dario Amodei, the CEO of Anthropic, published an essay called "The Urgency of Interpretability" in 2025 making essentially the same argument I've been trying to make here, that we're in a race between understanding these models and building more powerful ones, and that the window to get interpretability right is closing. He's more optimistic than I am about recent progress on circuits, and he puts a concrete timeline on it (Anthropic is aiming for "interpretability can reliably detect most model problems" by 2027). It was a strange thing to read, partly because it's validating to see someone with his vantage point say out loud what a lot of us have been circling around, and partly because if he's worried, that tells you something about how close the deadline actually is.</p>
+
+  <p>The thing I keep landing on is that all of this research is still early, and meanwhile we're deploying frontier models into sensitive domains at full speed.</p>
+
+  <h2>what I think</h2>
+
+  <p>I'm a student, so take this with however much salt you want. But a few things seem clear to me after spending time with this literature and topics.</p>
+
+  <p>The default should be interpretable models, and black boxes should have to earn their place (not the other way around). Rudin has demonstrated in criminal justice, healthcare, and computer vision that when researchers actually invest effort in interpretable approaches, the performance gap shrinks or disappears. The assumption that you need opacity for accuracy is often just an assumption nobody bothered to test.</p>
+
+  <p>We also need to be more honest about what post-hoc explainability tools actually give us. SHAP values and saliency maps are useful, but calling an approximation an "explanation" when the stakes are someone's prison sentence or cancer diagnosis is a kind of language slippage that does real harm, because it lets people believe the transparency problem is more solved than it is.</p>
+
+  <p>And mechanistic interpretability needs more funding and more people. The researchers trying to reverse-engineer what neural networks actually compute internally, figuring out the algorithms the weights encode, are doing work that matters a lot. But it's still a small community given how massive the problem is, and the distance between where we are and where we'd need to be to actually understand a frontier model is huge.</p>
+
+  <p>If you're in CS and you're early in your career like me, I think this is worth thinking about seriously. You don't have to let it paralyze you or make you feel guilty for building things. But maybe consider, before you ship something, whether you can explain what it does and what happens when it's wrong. We've gotten really good at building things that work. I think the next thing we have to figure out is how to build things we actually understand.</p>
+
+  <p>At the end of the day, we have to hope that the people in charge will make the right decisions and really think about what's best not just for profits but what is best for progress and ultimately humanity.</p>
+
+  <div class="references">
+    <h3>references</h3>
+    <ol>
+      <li>Rudin, C. (2019). Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead. <em>Nature Machine Intelligence</em>, 1, 206-215.</li>
+      <li>Budhkar, A., Song, Q., Su, J. & Zhang, X. (2025). Demystifying the black box: A survey on explainable artificial intelligence (XAI) in bioinformatics. <em>Computational and Structural Biotechnology Journal</em>, 27, 346-359.</li>
+      <li>Prince, S. & Savulescu, J. (2025). When is black-box AI justifiable to use in healthcare? <em>Big Data & Society</em>.</li>
+      <li>Pavlidis, G. (2025). Unlocking the Black Box: Analysing the EU AI Act's Framework for Explainability in AI. <em>arXiv:2502.14868</em>.</li>
+      <li>Kamhoua, G. et al. (2025). From Black Box to Glass Box: A Practical Review of Explainable Artificial Intelligence. <em>AI</em>, 6(11), 285.</li>
+      <li>Hassan, R. et al. (2025). Unlocking the black box: Enhancing human-AI collaboration in high-stakes healthcare. <em>Technological Forecasting and Social Change</em>.</li>
+      <li>Amodei, D. (2025). The Urgency of Interpretability. <em>darioamodei.com</em>.</li>
+    </ol>
+  </div>
+
+</article>
+
+<footer>
+  built with too much coffee and too many opinions
+</footer>
+
+</body>
+</html>

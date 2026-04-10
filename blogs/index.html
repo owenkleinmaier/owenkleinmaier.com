@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>blogs — owen kleinmaier</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --teal: #24637e;
+      --teal-light: #2d7a9a;
+      --teal-dark: #1b4d63;
+      --bg: #f5f0eb;
+      --bg-alt: #ede7e0;
+      --text: #2c2c2c;
+      --text-muted: #6b6560;
+      --accent-line: #24637e33;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    header {
+      padding: 3rem 2rem 2rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .breadcrumb a {
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    .breadcrumb span {
+      margin: 0 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      letter-spacing: -0.02em;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--accent-line);
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    .post-list {
+      list-style: none;
+    }
+
+    .post-list li {
+      display: flex;
+      align-items: baseline;
+      gap: 2rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--accent-line);
+    }
+
+    .post-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-width: 7rem;
+    }
+
+    .post-title {
+      font-size: 0.95rem;
+      color: var(--teal);
+      text-decoration: none;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    .post-title:hover {
+      color: var(--teal-light);
+      text-decoration: underline;
+    }
+
+    footer {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--accent-line);
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.4rem; }
+      .post-list li { flex-direction: column; gap: 0.25rem; }
+      header, main { padding-left: 1.2rem; padding-right: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="noise-overlay"></div>
+
+<header>
+  <div class="breadcrumb">
+    <a href="/">home</a><span>/</span>blogs
+  </div>
+  <h1>blogs</h1>
+</header>
+
+<main>
+  <!-- to add a post: copy the object pattern below and add a new entry -->
+  <ul class="post-list" id="post-list"></ul>
+</main>
+
+<footer>
+  built with too much coffee and too many opinions
+</footer>
+
+<script>
+  const posts = [
+    { date: "March 2026", title: "We Don't Know What Our AI Is Doing", href: "/blogs/black-box-ai.html" },
+  ];
+
+  const list = document.getElementById("post-list");
+  posts.forEach(post => {
+    const li = document.createElement("li");
+    li.innerHTML = `<span class="post-date">${post.date}</span><a class="post-title" href="${post.href}">${post.title}</a>`;
+    list.appendChild(li);
+  });
+</script>
+
+</body>
+</html>
