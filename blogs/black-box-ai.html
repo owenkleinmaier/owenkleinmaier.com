@@ -1,50 +1,114 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>We Don't Know What Our AI Is Doing</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <title>We Don't Know What Our AI Is Doing — owen kleinmaier</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
     :root {
-      --teal: #24637e;
-      --teal-light: #2d7a9a;
-      --teal-dark: #1b4d63;
-      --bg: #f5f0eb;
-      --bg-alt: #ede7e0;
-      --text: #2c2c2c;
-      --text-muted: #6b6560;
-      --accent-line: #24637e33;
+      --bg-primary: #faf9f7;
+      --bg-secondary: #f5f4f1;
+      --bg-tertiary: #ffffff;
+      --text-primary: #2c2c2c;
+      --text-secondary: #666666;
+      --text-muted: #999999;
+      --accent-primary: #24637e;
+      --accent-secondary: #2f7a99;
+      --accent-dark: #1b4d63;
+      --border-light: #e8e5e0;
+      --shadow-light: rgba(0, 0, 0, 0.05);
+      --shadow-medium: rgba(0, 0, 0, 0.1);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    .dark-theme {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #242424;
+      --bg-tertiary: #2a2a2a;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --text-muted: #888888;
+      --accent-primary: #24637e;
+      --accent-secondary: #2f7a99;
+      --accent-dark: #2d7a9a;
+      --border-light: #404040;
+      --shadow-light: rgba(0, 0, 0, 0.2);
+      --shadow-medium: rgba(0, 0, 0, 0.3);
     }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'JetBrains Mono', monospace;
-      background: var(--bg);
-      color: var(--text);
+      font-family: "JetBrains Mono", monospace;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
       line-height: 1.75;
+      font-size: 14px;
+      font-weight: 400;
       -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .noise-overlay {
+    .theme-toggle {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0.025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      top: 24px;
+      right: 24px;
+      z-index: 100;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 16px;
+      padding: 4px;
+      cursor: pointer;
+      transition: color 0.2s ease;
     }
+
+    .theme-toggle:hover { color: var(--accent-primary); }
+
+    .nav {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      background: var(--bg-tertiary);
+      padding: 12px 24px;
+      border-radius: 16px;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 2px 16px var(--shadow-light);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-links { display: flex; gap: 24px; }
+
+    .nav-theme-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 16px;
+      padding: 4px;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .nav-theme-toggle:hover { color: var(--accent-primary); }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover { color: var(--accent-primary); }
 
     header {
-      padding: 3rem 2rem 2rem;
+      padding: 120px 2rem 2rem;
       max-width: 720px;
       margin: 0 auto;
     }
@@ -58,22 +122,25 @@
     }
 
     .breadcrumb a {
-      color: var(--teal);
+      color: var(--accent-primary);
       text-decoration: none;
+      transition: color 0.2s ease;
     }
 
-    .breadcrumb span {
-      margin: 0 0.5rem;
-    }
+    .breadcrumb a:hover { color: var(--accent-secondary); }
+
+    .breadcrumb span { margin: 0 0.5rem; }
 
     h1 {
       font-size: 1.9rem;
-      font-weight: 700;
+      font-weight: 600;
       line-height: 1.3;
-      color: var(--teal-dark);
+      color: var(--accent-dark);
       margin-bottom: 1rem;
       letter-spacing: -0.02em;
     }
+
+    .dark-theme h1 { color: var(--text-primary); }
 
     .meta {
       font-size: 0.78rem;
@@ -82,16 +149,17 @@
       gap: 1.5rem;
       align-items: center;
       padding-bottom: 2rem;
-      border-bottom: 1px solid var(--accent-line);
+      border-bottom: 1px solid var(--border-light);
     }
 
     .tag {
-      background: var(--teal);
-      color: var(--bg);
+      background: var(--accent-primary);
+      color: var(--bg-primary);
       padding: 0.15rem 0.6rem;
       font-size: 0.68rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      border-radius: 4px;
     }
 
     article {
@@ -104,6 +172,8 @@
       font-size: 0.88rem;
       margin-bottom: 1.5rem;
       font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.8;
     }
 
     article p:first-of-type::first-letter {
@@ -112,43 +182,46 @@
       line-height: 1;
       margin-right: 0.5rem;
       margin-top: 0.1rem;
-      color: var(--teal);
+      color: var(--accent-primary);
       font-weight: 700;
     }
 
     .callout {
-      border-left: 3px solid var(--teal);
+      border-left: 3px solid var(--accent-primary);
       padding: 1.2rem 1.5rem;
       margin: 2rem 0;
-      background: var(--bg-alt);
+      background: var(--bg-secondary);
       font-size: 0.85rem;
       font-style: italic;
-      color: var(--teal-dark);
+      color: var(--accent-dark);
     }
+
+    .dark-theme .callout { color: var(--text-secondary); }
 
     h2 {
       font-size: 1.15rem;
       font-weight: 600;
-      color: var(--teal-dark);
+      color: var(--accent-dark);
       margin: 2.5rem 0 1rem;
       letter-spacing: -0.01em;
     }
 
+    .dark-theme h2 { color: var(--accent-secondary); }
+
     a {
-      color: var(--teal);
+      color: var(--accent-primary);
       text-decoration: underline;
       text-decoration-thickness: 1px;
       text-underline-offset: 2px;
+      transition: color 0.2s ease;
     }
 
-    a:hover {
-      color: var(--teal-light);
-    }
+    a:hover { color: var(--accent-secondary); }
 
     .references {
       margin-top: 3rem;
       padding-top: 2rem;
-      border-top: 1px solid var(--accent-line);
+      border-top: 1px solid var(--border-light);
     }
 
     .references h3 {
@@ -179,21 +252,38 @@
       content: "[" counter(ref) "]";
       position: absolute;
       left: 0;
-      color: var(--teal);
+      color: var(--accent-primary);
       font-weight: 600;
     }
 
-    footer {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 2rem;
-      text-align: center;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      border-top: 1px solid var(--accent-line);
-    }
+    @media (max-width: 768px) {
+      .theme-toggle { display: none; }
 
-    @media (max-width: 600px) {
+      .nav {
+        position: static;
+        transform: none;
+        margin: 20px auto 0 auto;
+        max-width: calc(100% - 40px);
+        width: calc(100% - 40px);
+        justify-content: space-between;
+        padding: 12px 16px;
+      }
+
+      .nav-links {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .nav-theme-toggle {
+        display: block;
+        position: static;
+        transform: none;
+        flex-shrink: 0;
+      }
+
+      header { padding-top: 40px; }
       h1 { font-size: 1.4rem; }
       article p { font-size: 0.84rem; }
       header, article { padding-left: 1.2rem; padding-right: 1.2rem; }
@@ -202,7 +292,22 @@
 </head>
 <body>
 
-<div class="noise-overlay"></div>
+<button class="theme-toggle" onclick="toggleTheme()">
+  <i class="fas fa-moon" id="theme-icon"></i>
+</button>
+
+<nav class="nav">
+  <div class="nav-links">
+    <a href="/" class="nav-link">home</a>
+    <a href="/#about" class="nav-link">about</a>
+    <a href="/#skills" class="nav-link">skills</a>
+    <a href="/#projects" class="nav-link">projects</a>
+    <a href="/blogs" class="nav-link">blogs</a>
+  </div>
+  <button class="nav-theme-toggle" onclick="toggleTheme()">
+    <i class="fas fa-moon" id="nav-theme-icon"></i>
+  </button>
+</nav>
 
 <header>
   <div class="breadcrumb">
@@ -287,9 +392,23 @@
 
 </article>
 
-<footer>
-  built with too much coffee and too many opinions
-</footer>
+<script>
+  function toggleTheme() {
+    document.body.classList.toggle("dark-theme");
+    const isDark = document.body.classList.contains("dark-theme");
+    const iconClass = isDark ? "fas fa-sun" : "fas fa-moon";
+    document.getElementById("theme-icon").className = iconClass;
+    document.getElementById("nav-theme-icon").className = iconClass;
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }
+
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-theme");
+    document.getElementById("theme-icon").className = "fas fa-sun";
+    document.getElementById("nav-theme-icon").className = "fas fa-sun";
+  }
+</script>
 
 </body>
 </html>
