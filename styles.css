@@ -6,7 +6,6 @@
   --muted: #5f5e56;
   --line: #e4e2d6;
   --accent: #196b24;
-  --grid: rgba(31, 31, 26, 0.03);
   --sans: "Galvji", "Instrument Sans", system-ui, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, monospace;
   color-scheme: light;
@@ -18,7 +17,6 @@
   --muted: #a3a296;
   --line: #34342e;
   --accent: #8fcf95;
-  --grid: rgba(242, 241, 232, 0.025);
   color-scheme: dark;
 }
 
@@ -57,22 +55,6 @@ a:hover {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
-}
-
-.home::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 400px;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 28px 28px;
-  background-position: 50% 0;
-  -webkit-mask-image: linear-gradient(#000, transparent);
-  mask-image: linear-gradient(#000, transparent);
 }
 
 .page {
