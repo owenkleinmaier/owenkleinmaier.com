@@ -4,332 +4,48 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>We Don't Know What Our AI Is Doing — owen kleinmaier</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <style>
-    :root {
-      --bg-primary: #faf9f7;
-      --bg-secondary: #f5f4f1;
-      --bg-tertiary: #ffffff;
-      --text-primary: #2c2c2c;
-      --text-secondary: #666666;
-      --text-muted: #999999;
-      --accent-primary: #24637e;
-      --accent-secondary: #2f7a99;
-      --accent-dark: #1b4d63;
-      --border-light: #e8e5e0;
-      --shadow-light: rgba(0, 0, 0, 0.05);
-      --shadow-medium: rgba(0, 0, 0, 0.1);
-    }
-
-    .dark-theme {
-      --bg-primary: #1a1a1a;
-      --bg-secondary: #242424;
-      --bg-tertiary: #2a2a2a;
-      --text-primary: #ffffff;
-      --text-secondary: #cccccc;
-      --text-muted: #888888;
-      --accent-primary: #24637e;
-      --accent-secondary: #2f7a99;
-      --accent-dark: #2d7a9a;
-      --border-light: #404040;
-      --shadow-light: rgba(0, 0, 0, 0.2);
-      --shadow-medium: rgba(0, 0, 0, 0.3);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: "JetBrains Mono", monospace;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.75;
-      font-size: 14px;
-      font-weight: 400;
-      -webkit-font-smoothing: antialiased;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .theme-toggle {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      z-index: 100;
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 16px;
-      padding: 4px;
-      cursor: pointer;
-      transition: color 0.2s ease;
-    }
-
-    .theme-toggle:hover { color: var(--accent-primary); }
-
-    .nav {
-      position: fixed;
-      top: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      background: var(--bg-tertiary);
-      padding: 12px 24px;
-      border-radius: 16px;
-      border: 1px solid var(--border-light);
-      box-shadow: 0 2px 16px var(--shadow-light);
-      backdrop-filter: blur(10px);
-    }
-
-    .nav-links { display: flex; gap: 24px; }
-
-    .nav-theme-toggle {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 16px;
-      padding: 4px;
-      cursor: pointer;
-      transition: color 0.2s ease;
-    }
-
-    .nav-theme-toggle:hover { color: var(--accent-primary); }
-
-    .nav-link {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 400;
-      transition: color 0.2s ease;
-    }
-
-    .nav-link:hover { color: var(--accent-primary); }
-
-    header {
-      padding: 120px 2rem 2rem;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .breadcrumb {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 2rem;
-    }
-
-    .breadcrumb a {
-      color: var(--accent-primary);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .breadcrumb a:hover { color: var(--accent-secondary); }
-
-    .breadcrumb span { margin: 0 0.5rem; }
-
-    h1 {
-      font-size: 1.9rem;
-      font-weight: 600;
-      line-height: 1.3;
-      color: var(--accent-dark);
-      margin-bottom: 1rem;
-      letter-spacing: -0.02em;
-    }
-
-    .dark-theme h1 { color: var(--text-primary); }
-
-    .meta {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    .tag {
-      background: var(--accent-primary);
-      color: var(--bg-primary);
-      padding: 0.15rem 0.6rem;
-      font-size: 0.68rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      border-radius: 4px;
-    }
-
-    article {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 2.5rem 2rem 4rem;
-    }
-
-    article p {
-      font-size: 0.88rem;
-      margin-bottom: 1.5rem;
-      font-weight: 400;
-      color: var(--text-secondary);
-      line-height: 1.8;
-    }
-
-    article p:first-of-type::first-letter {
-      font-size: 2.8rem;
-      float: left;
-      line-height: 1;
-      margin-right: 0.5rem;
-      margin-top: 0.1rem;
-      color: var(--accent-primary);
-      font-weight: 700;
-    }
-
-    .callout {
-      border-left: 3px solid var(--accent-primary);
-      padding: 1.2rem 1.5rem;
-      margin: 2rem 0;
-      background: var(--bg-secondary);
-      font-size: 0.85rem;
-      font-style: italic;
-      color: var(--accent-dark);
-    }
-
-    .dark-theme .callout { color: var(--text-secondary); }
-
-    h2 {
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: var(--accent-dark);
-      margin: 2.5rem 0 1rem;
-      letter-spacing: -0.01em;
-    }
-
-    .dark-theme h2 { color: var(--accent-secondary); }
-
-    a {
-      color: var(--accent-primary);
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 2px;
-      transition: color 0.2s ease;
-    }
-
-    a:hover { color: var(--accent-secondary); }
-
-    .references {
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border-light);
-    }
-
-    .references h3 {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-    }
-
-    .references ol {
-      list-style: none;
-      counter-reset: ref;
-      padding: 0;
-    }
-
-    .references li {
-      counter-increment: ref;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 0.8rem;
-      padding-left: 2rem;
-      position: relative;
-      line-height: 1.6;
-    }
-
-    .references li::before {
-      content: "[" counter(ref) "]";
-      position: absolute;
-      left: 0;
-      color: var(--accent-primary);
-      font-weight: 600;
-    }
-
-    @media (max-width: 768px) {
-      .theme-toggle { display: none; }
-
-      .nav {
-        position: static;
-        transform: none;
-        margin: 20px auto 0 auto;
-        max-width: calc(100% - 40px);
-        width: calc(100% - 40px);
-        justify-content: space-between;
-        padding: 12px 16px;
-      }
-
-      .nav-links {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-      }
-
-      .nav-theme-toggle {
-        display: block;
-        position: static;
-        transform: none;
-        flex-shrink: 0;
-      }
-
-      header { padding-top: 40px; }
-      h1 { font-size: 1.4rem; }
-      article p { font-size: 0.84rem; }
-      header, article { padding-left: 1.2rem; padding-right: 1.2rem; }
-    }
-  </style>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png" />
+  <link rel="stylesheet" href="../styles.css" />
+  <script src="../theme.js"></script>
+  <script src="../character.js" defer></script>
 </head>
 <body>
+<div class="page">
+  <nav class="nav">
+    <a class="brand" aria-label="home" href="../index.html">
+      <img class="character light-only" src="../character.png" alt="" />
+      <img class="character dark-only" src="../character-dark.png" alt="" />
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#work">work</a>
+      <a href="index.html">writing</a>
+      <a href="../resume.pdf" target="_blank" rel="noopener">resume</a>
+      <button class="theme-toggle" onclick="toggleTheme()">dark</button>
+    </div>
+  </nav>
 
-<button class="theme-toggle" onclick="toggleTheme()">
-  <i class="fas fa-moon" id="theme-icon"></i>
-</button>
+  <main>
+    <header class="post-header">
+      <h1>We Don't Know What Our AI Is Doing</h1>
+      <div class="meta">
+        <span>mar 2026</span>
+        <span>opinion</span>
+        <span>~8 min read</span>
+      </div>
+    </header>
 
-<nav class="nav">
-  <div class="nav-links">
-    <a href="/" class="nav-link">home</a>
-    <a href="/#about" class="nav-link">about</a>
-    <a href="/#skills" class="nav-link">skills</a>
-    <a href="/#projects" class="nav-link">projects</a>
-    <a href="/#blog" class="nav-link">blog</a>
-  </div>
-  <button class="nav-theme-toggle" onclick="toggleTheme()">
-    <i class="fas fa-moon" id="nav-theme-icon"></i>
-  </button>
-</nav>
+    <article class="post">
 
-<header>
-  <div class="breadcrumb">
-    <a href="/">home</a><span>/</span><a href="/#blog">blogs</a><span>/</span>black-box-ai
-  </div>
-  <h1>We Don't Know What Our AI Is Doing</h1>
-  <div class="meta">
-    <span class="tag">opinion</span>
-    <span>March 2026</span>
-    <span>~6 min read</span>
-  </div>
-</header>
+  <p>I've been thinking about this a lot lately and wanted to look more into it. We are putting AI systems into hospitals, courtrooms, hiring pipelines, and a bunch of other places where the output actually changes someone's life. But with some of these models, getting an answer is a lot easier than understanding why we got it. We know how we trained them and can inspect the calculations. That doesn't mean we can give someone a useful, reliable account of why a particular decision went against them. Even asking a reasoning model to explain itself doesn't guarantee that the explanation reflects how it reached its answer. I find that pretty alarming.</p>
 
-<article>
-
-  <p>I've been thinking about this a lot lately and wanted to look more into it. We are putting AI systems into hospitals, courtrooms, hiring pipelines, loan approvals, and a bunch of other places where the output actually changes someone's life, and the weird part is that nobody involved really knows how these models arrive at their answers. I don't mean that in a hand-wavy "well it's complicated" sense that engineers sometimes do. I mean the engineers who built the model cannot look at a given output and trace back through the reasoning that produced it. The data goes in, some math happens across a few billion parameters, and a number comes out the other end (just a bit simplified:)). Even modern reasoning models cannot fully explain WHY they specifically chose that answer, and I find this very alarming.</p>
-
-  <p>This is what gets called the black box problem. It's been written about for years at this point, and I read a bunch of the literature on it in class last year (we spent a week on Cynthia Rudin's paper, which I'll get into). But the thing that keeps nagging at me is that AI deployment is moving so much faster than the conversation about what we don't understand. The gap between what we can build and what we can explain is getting wider, not narrower, and it feels like most people in the industry have just quietly accepted the tradeoff without really sitting with how weird it is. There are obvious structural reasons for this, capitalism, competitive pressure and the near-total absence of policy, but I'll save that thread for another time.</p>
+  <p>This is what gets called the black box problem. I read a bunch of the literature on it in class last year and wrote an op-ed about it. Coming back to it, the question that bothers me most is pretty simple: if a system makes a decision about you, what can you actually do when you think it's wrong? It's easy to talk about transparency as an engineering problem. It's harder to imagine being the person stuck asking for an explanation nobody can give you.</p>
 
   <h2>the accuracy thing</h2>
 
-  <p>The standard defense of black-box models is that they perform better, and to be fair that's often true. Deep neural networks regularly outperform simpler models on most benchmarks. In medical imaging specifically, there's been work showing black-box models matching or beating clinician-level accuracy on mammogram screening, skin cancer classification, diabetic retinopathy detection, and a few other things (Prince and Savulescu cover this well in their 2025 paper). I don't want to wave that away because it's impressive and it matters and its such a huge step in the right direction.</p>
+  <p>The standard defense of black-box models is that they perform better, and to be fair that's often true. Deep neural networks regularly outperform simpler models on most benchmarks. In medical imaging specifically, there's been work showing black-box models matching or beating clinician-level accuracy on mammogram screening, skin cancer classification, diabetic retinopathy detection, and a few other things (Prince and Savulescu cover this well in their 2025 paper). I don't want to wave that away because it's impressive and it matters and it's such a huge step in the right direction.</p>
 
   <p>But here's where I always get stuck. Accuracy on a held-out test set and trustworthiness in the real world are really different things, and we talk about them like they're interchangeable when they're not. A model can score 97% on your evaluation metrics and still be latching onto some spurious correlation in the training data, or encoding a bias that nobody thought to check for, or arriving at the right answer for a completely wrong reason. The whole problem with a black box is that you can't open it up and look, so you do not know which of those scenarios you're in. You're just looking at the accuracy number on a dashboard and calling it good enough, which feels like a strange amount of trust to place in something you fundamentally do not understand.</p>
 
@@ -345,17 +61,19 @@
 
   <p>Interpretability is what you get when the model itself is designed so that a human can follow its reasoning directly. Rudin's argument is that for high-stakes decisions, we should default to interpretable models and only reach for black boxes when we can show that interpretable approaches can't do the job. She's also demonstrated in multiple domains that when researchers actually try to build competitive interpretable models, they often come surprisingly close to black-box performance. That complicates the whole story that opacity is just the price you pay for accuracy.</p>
 
-  <p>The problem is that the industry doesn't reward that kind of work (at least right now). Nobody gets funded for building something slightly less flashy that you can actually understand. There's no leaderboard for transparency. The incentives all point toward bigger models and better benchmark scores, and I don't see that changing on its own.</p>
+  <p>The problem is that building something people can understand takes work, and a better benchmark score is much easier to show off. I don't think every company ignores transparency. But if the reward is for shipping a more capable model before everyone else, I don't see why we'd expect understanding it to get the same attention. Someone has to pay for that work and make it part of deciding whether a system is ready to use.</p>
 
   <h2>where this can be a problem</h2>
 
-  <p>The COMPAS recidivism system is the example that comes up in every conversation about this, and even though it's kind of overused at this point, it's worth going over because of how stark it is. COMPAS is a proprietary black-box tool used in U.S. courtrooms to predict whether a defendant will reoffend. Judges use its risk score as a factor in sentencing. ProPublica reported years ago that the system was biased against Black defendants, assigning them higher risk scores even when controlling for prior offenses. And because the model is proprietary and opaque, there is no real way for a defendant or their lawyer to challenge the logic behind the score. You get a number, it affects your sentence, and the reasoning behind it is locked inside a company's product. We designed that system and then put it into courtrooms knowing all of this.</p>
+  <p>The example I used in my op-ed was Eric Loomis. His sentencing judge considered a COMPAS risk assessment, and Loomis challenged the use of a score whose proprietary calculation he couldn't inspect. In 2016, the Wisconsin Supreme Court upheld its use with limitations and cautions, emphasizing that other factors independently supported the sentence. So this wasn't an algorithm handing down a sentence on its own. It was a judge using information the person being sentenced couldn't fully examine. That distinction matters, but it doesn't make me much more comfortable. <a href="https://www.wicourts.gov/sc/opinion/DisplayDocument.pdf?content=pdf&amp;seqNo=171690">The court's opinion</a> is worth reading.</p>
+
+  <p>COMPAS also points to a distinction I blurred in the original version of this post. A system can be opaque because its workings are kept secret, because they're difficult to understand, or both. Those aren't exactly the same problem. But from the outside, you can still end up in the same frustrating position: someone is using a score to make a decision about you, and you can't meaningfully question how they got it.</p>
 
   <p>Healthcare is the other domain where I find this really weird. I came across a paper from IU's own CS department at Luddy (Budhkar et al., 2025) that surveys explainability techniques in bioinformatics, and the honest conclusion is that we're still pretty far from having reliable tools for understanding what these models do in medical contexts. Black-box models are already being used in genomics and medical imaging, and the question of what happens when a model flags a patient as high-risk and the doctor can't interrogate why is not hypothetical anymore. Medicine requires so much context that a model can't have: a patient's living situation, their preferences, what they're actually willing to do about a diagnosis. If the doctor just follows the number because the accuracy metrics look good, we've effectively outsourced clinical judgment to a system nobody can look inside. I don't think that's what anyone wanted when they started working on AI in healthcare, but it's where we've ended up.</p>
 
   <h2>regulation is trying (maybe not enough)</h2>
 
-  <p>The EU AI Act went into force in 2024 and it's the most serious regulatory attempt at this so far. It classifies AI systems by risk level and requires that high-risk applications (which includes healthcare and criminal justice) be "sufficiently transparent." The catch is that what "sufficiently transparent" means in engineering terms is still an open question, and will be for a while. Pavlidis (2025) has a good paper analyzing the Act's explainability framework, and his conclusion is basically that the intent is right but the implementation details are going to be messy and contested for years.</p>
+  <p>The <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng">EU AI Act</a>, adopted in 2024, gives this discussion some teeth. Article 13 requires high-risk systems to be transparent enough for deployers to interpret their outputs and use them appropriately. That is a real requirement, though it doesn't mean every model has to expose a complete account of its internal reasoning. My question is what that transparency looks like to the person affected. Does it help them challenge a decision, or does it mostly help the organization explain how it uses the software? Those are different needs, and I'd want to know which one we're actually meeting.</p>
 
   <p>On the research side, there are some things happening that I find encouraging. Anthropic published work in 2024 using dictionary learning and sparse feature extraction to locate how concepts are represented inside Claude. They showed you could find actual human-understandable features in a large model, things like a "Golden Gate Bridge" feature and a "code bugs" feature, though the technique is still hard to scale. DeepMind open-sourced interpretability tooling with their Gemma Scope project. The mechanistic interpretability community is still small, but it's pulling in serious people.</p>
 
@@ -365,25 +83,26 @@
 
   <h2>what I think</h2>
 
-  <p>I'm a student, so take this with however much salt you want. But a few things seem clear to me after spending time with this literature and topics.</p>
+  <p>I'm a student, and I don't have a neat fix for this. But writing the op-ed helped me get clearer about what I'd actually want to change.</p>
 
-  <p>The default should be interpretable models, and black boxes should have to earn their place (not the other way around). Rudin has demonstrated in criminal justice, healthcare, and computer vision that when researchers actually invest effort in interpretable approaches, the performance gap shrinks or disappears. The assumption that you need opacity for accuracy is often just an assumption nobody bothered to test.</p>
+  <p>For high-stakes decisions, I think we should try interpretable models first and make a serious comparison before deciding we need a black box. That won't settle every case. Sometimes a more complex model may offer benefits that are hard to give up. But "it's more accurate" should come with evidence for the task at hand, including where it fails. It shouldn't end the conversation.</p>
 
-  <p>We also need to be more honest about what post-hoc explainability tools actually give us. SHAP values and saliency maps are useful, but calling an approximation an "explanation" when the stakes are someone's prison sentence or cancer diagnosis is a kind of language slippage that does real harm, because it lets people believe the transparency problem is more solved than it is.</p>
+  <p>We also need to be more honest about what post-hoc tools give us. A SHAP plot or saliency map can help someone investigate a model, but it doesn't automatically explain everything that matters about a decision. I'd want to know whether the explanation is reliable enough for the thing we're asking someone to do with it. A researcher debugging a model and a patient trying to understand a recommendation need different things.</p>
 
   <p>And mechanistic interpretability needs more funding and more people. The researchers trying to reverse-engineer what neural networks actually compute internally, figuring out the algorithms the weights encode, are doing work that matters a lot. But it's still a small community given how massive the problem is, and the distance between where we are and where we'd need to be to actually understand a frontier model is huge.</p>
 
-  <p>If you're in CS and you're early in your career like me, I think this is worth thinking about seriously. You don't have to let it paralyze you or make you feel guilty for building things. But maybe consider, before you ship something, whether you can explain what it does and what happens when it's wrong. We've gotten really good at building things that work. I think the next thing we have to figure out is how to build things we actually understand.</p>
+  <p>The part I pushed harder on in the op-ed is that better research won't fix the incentives by itself. If a hospital or a court uses a system, someone there needs to be responsible for questioning its output and correcting mistakes. The people affected need a way to ask for that review. And the rules need to make those responsibilities part of using the system, rather than something an organization can promise to sort out later. Otherwise we can get much better at explaining models without making it much easier to challenge their decisions.</p>
 
-  <p>At the end of the day, we have to hope that the people in charge will make the right decisions and really think about what's best not just for profits but what is best for progress and ultimately humanity.</p>
+  <p>If you're in CS and early in your career like me, I think this is worth thinking about before you ship something. Who has to live with the answer your software gives? If it's wrong, who can they talk to, and can that person actually do anything about it? I still like building things. I just want us to spend more time on what happens to the people using them when they don't work.</p>
 
   <div class="references">
-    <h3>references</h3>
+    <h2>references</h2>
     <ol>
       <li>Rudin, C. (2019). Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead. <em>Nature Machine Intelligence</em>, 1, 206-215.</li>
       <li>Budhkar, A., Song, Q., Su, J. & Zhang, X. (2025). Demystifying the black box: A survey on explainable artificial intelligence (XAI) in bioinformatics. <em>Computational and Structural Biotechnology Journal</em>, 27, 346-359.</li>
       <li>Prince, S. & Savulescu, J. (2025). When is black-box AI justifiable to use in healthcare? <em>Big Data & Society</em>.</li>
-      <li>Pavlidis, G. (2025). Unlocking the Black Box: Analysing the EU AI Act's Framework for Explainability in AI. <em>arXiv:2502.14868</em>.</li>
+      <li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng">Regulation (EU) 2024/1689</a>, Article 13.</li>
+      <li><a href="https://www.wicourts.gov/sc/opinion/DisplayDocument.pdf?content=pdf&amp;seqNo=171690">State v. Loomis</a>, 2016 WI 68.</li>
       <li>Kamhoua, G. et al. (2025). From Black Box to Glass Box: A Practical Review of Explainable Artificial Intelligence. <em>AI</em>, 6(11), 285.</li>
       <li>Hassan, R. et al. (2025). Unlocking the black box: Enhancing human-AI collaboration in high-stakes healthcare. <em>Technological Forecasting and Social Change</em>.</li>
       <li>Amodei, D. (2025). The Urgency of Interpretability. <em>darioamodei.com</em>.</li>
@@ -391,24 +110,11 @@
   </div>
 
 </article>
+  </main>
 
-<script>
-  function toggleTheme() {
-    document.body.classList.toggle("dark-theme");
-    const isDark = document.body.classList.contains("dark-theme");
-    const iconClass = isDark ? "fas fa-sun" : "fas fa-moon";
-    document.getElementById("theme-icon").className = iconClass;
-    document.getElementById("nav-theme-icon").className = iconClass;
-    localStorage.setItem("theme", isDark ? "dark" : "light");
-  }
-
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark") {
-    document.body.classList.add("dark-theme");
-    document.getElementById("theme-icon").className = "fas fa-sun";
-    document.getElementById("nav-theme-icon").className = "fas fa-sun";
-  }
-</script>
-
+  <footer class="meta">
+    <p><a href="../index.html">← back home</a></p>
+  </footer>
+</div>
 </body>
 </html>
