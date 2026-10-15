@@ -1,120 +1,378 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>We Don't Know What Our AI Is Doing — owen kleinmaier</title>
-  <link rel="icon" type="image/x-icon" href="../favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png" />
-  <link rel="stylesheet" href="../styles.css" />
-  <script src="../theme.js"></script>
-  <script src="../character.js" defer></script>
-</head>
-<body>
-<div class="page">
-  <nav class="nav">
-    <a class="brand" aria-label="home" href="../index.html">
-      <img class="character light-only" src="../character.png" alt="" />
-      <img class="character dark-only" src="../character-dark.png" alt="" />
-    </a>
-    <div class="nav-links">
-      <a href="../index.html#work">work</a>
-      <a href="index.html">writing</a>
-      <a href="../resume.pdf" target="_blank" rel="noopener">resume</a>
-      <button class="theme-toggle" onclick="toggleTheme()">dark</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>We Don't Know What Our AI Is Doing — owen kleinmaier</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="../apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="../favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="../favicon-16x16.png"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+    <script src="../theme.js"></script>
+    <script src="../character.js" defer></script>
+  </head>
+  <body>
+    <div class="page">
+      <nav class="nav">
+        <a class="brand" aria-label="home" href="../index.html">
+          <img class="character light-only" src="../character.png" alt="" />
+          <img class="character dark-only" src="../character-dark.png" alt="" />
+        </a>
+        <div class="nav-links">
+          <a href="../index.html#work">work</a>
+          <a href="index.html">writing</a>
+          <a href="../resume.pdf" target="_blank" rel="noopener">resume</a>
+          <button class="theme-toggle" onclick="toggleTheme()">dark</button>
+        </div>
+      </nav>
+
+      <main>
+        <header class="post-header">
+          <h1>We Don't Know What Our AI Is Doing</h1>
+          <div class="meta">
+            <span>last updated mar 2026</span>
+          </div>
+        </header>
+
+        <article class="post">
+          <p>
+            We are putting AI systems into hospitals, courtrooms, hiring
+            pipelines, and a bunch of other places where the output actually
+            changes someone's life, but with some of these models, getting an
+            answer is a lot easier than understanding why we got it. We know how
+            we trained them and can inspect the calculations. That doesn't mean
+            we can give someone a useful or reliable account of why a particular
+            decision went against them. Even asking a reasoning model to explain
+            itself doesn't guarantee that the explanation reflects how it
+            reached its answer and I find that pretty alarming.
+          </p>
+
+          <p>
+            This is what people called the black box problem. I read a bunch of
+            the literature on it in class last year and wrote an op-ed about it.
+            Coming back to it, the question that bothers me most is pretty
+            simple: if a system makes a decision about you, what can you
+            actually do when you think it's wrong? It's easy to talk about
+            transparency as an engineering problem but its much harder to
+            imagine being the person stuck asking for an explanation nobody can
+            give you.
+          </p>
+
+          <h2>the accuracy thing</h2>
+
+          <p>
+            The standard defense of black-box models is that they perform
+            better, and to be fair that's often true. Deep neural networks
+            regularly outperform simpler models on most benchmarks. In medical
+            imaging specifically, there's been work showing black-box models
+            matching or beating clinician-level accuracy on mammogram screening,
+            skin cancer classification, diabetic retinopathy detection, and a
+            few other things (Prince and Savulescu cover this well in their 2025
+            paper). I don't want to wave that away because it's impressive and
+            it matters and it's such a huge step in the right direction!
+          </p>
+
+          <p>
+            But... here's where I always get stuck. Accuracy on a held-out test
+            set and trustworthiness in the real world are really different
+            things, and people in this field often talk about them like they're
+            interchangeable when they're not. A model can score 97% on your
+            evaluation metrics and still be latching onto some random and
+            irrelavent correlation in the training data, or encoding a bias that
+            nobody thought to check for or arriving at the right answer for a
+            completely wrong reason. The whole problem with a black box is that
+            you can't open it up and look at it, so you do not know which of
+            those scenarios you're in. You're just looking at the accuracy
+            number on a dashboard and calling it good enough, which feels like a
+            strange amount of trust to place in something you fundamentally do
+            not understand.
+          </p>
+
+          <p>
+            Cynthia Rudin made this point in 2019: if an explanation of a black
+            box were actually complete and faithful to what the model does
+            internally, it would just be the model and you wouldn't need the
+            black box. The very fact that you need a separate explanation tells
+            you it's an approximation, and approximations can be wrong in some
+            ways you wont or even can't catch.
+          </p>
+
+          <h2>explaining versus understanding</h2>
+
+          <p>
+            Cynthia Rudin published this paper in Nature Machine Intelligence in
+            2019 called "Stop Explaining Black Box Machine Learning Models for
+            High Stakes Decisions and Use Interpretable Models Instead," which,
+            credit to her, is about as clear a title as you'll ever see on an
+            academic paper. We read it in my KBAI course and it stuck with me
+            more than most things I've read in school.
+          </p>
+
+          <p>
+            Her central point is that there's a real difference between
+            explainability and interpretability, and the field has been pouring
+            energy into the wrong one. Explainability is what you get when you
+            build a black-box model and then use a second tool (something like
+            LIME or SHAP or a saliency map) to try to approximate what the first
+            model did after the fact. Those tools are useful for debugging and
+            building intuition about model behavior, and I don't think anyone
+            should stop using them. But they are approximations. They're a
+            second model's best guess about what the first model was doing, and
+            that guess will always be incomplete because if it weren't, you'd
+            just use the explanation instead of the original model.
+          </p>
+
+          <p>
+            Interpretability is what you get when the model itself is designed
+            so that a human can follow its reasoning directly. Rudin's argument
+            is that for high-stakes decisions, we should default to
+            interpretable models and only reach for black boxes when we can show
+            that interpretable approaches can't do the job. She's also
+            demonstrated in multiple domains that when researchers actually try
+            to build competitive interpretable models, they often come
+            surprisingly close to black-box performance. It challenges the whole
+            story that opacity of a model is going to be just the price you pay
+            for accuracy.
+          </p>
+
+          <p>
+            The problem is that building something people can understand takes
+            work (often times much more work) and a better benchmark score is
+            much easier to show off, especially when profit is priority (which
+            sadly it usually is). I don't think every company ignores
+            transparency, but if the reward is larger for shipping a more
+            capable model before everyone else, I don't see why we'd expect
+            understanding it to get the same attention.
+          </p>
+
+          <h2>where this can be a problem</h2>
+
+          <p>
+            The example I used in my op-ed was Eric Loomis. His sentencing judge
+            considered a COMPAS risk assessment, and Loomis challenged the use
+            of a score whose proprietary calculation he couldn't even inspect.
+            In 2016, the Wisconsin Supreme Court upheld its use with limitations
+            and cautions, emphasizing that other factors independently supported
+            the sentence. Now, it was a judge using the information the
+            algorithm gave not the algorithm just spitting out a sentence but it
+            still makes me very uncomfortable.
+            <a
+              href="https://www.wicourts.gov/sc/opinion/DisplayDocument.pdf?content=pdf&amp;seqNo=171690"
+              >The court's opinion</a
+            >
+            is worth reading.
+          </p>
+
+          <p>
+            COMPAS also points to a distinction I blurred in the original
+            version of this post. A system can be opaque because its workings
+            are kept secret, because they're difficult to understand, or both.
+            Those aren't exactly the same problem.. but from the outside, you
+            can still end up in the same frustrating position, which is: someone
+            is using a score to make a decision about you, and you can't
+            meaningfully question how they got it.
+          </p>
+
+          <p>
+            Healthcare is the other domain where I find this really weird and
+            concerning. I came across a paper from IU's own CS department at
+            Luddy (Budhkar et al., 2025) that surveys explainability techniques
+            in bioinformatics, and the honest conclusion is that we're still
+            pretty far from having reliable tools for understanding what these
+            models do in medical contexts. Black-box models are already being
+            used in genomics and medical imaging, and the question of what
+            happens when a model flags a patient as high-risk and the doctor
+            can't interrogate why is not hypothetical anymore. Medicine requires
+            so much context that a model can't have, things like a patient's
+            living situation, their preferences, what they're actually willing
+            to do about a diagnosis. If the doctor just follows the number
+            because the accuracy metrics look good, we've effectively outsourced
+            clinical judgment to a system nobody can look inside. I don't think
+            that's what anyone wanted when they started working on AI in
+            healthcare, but it's where we will end up or already have I guess.
+          </p>
+
+          <h2>regulation is trying (maybe not enough)</h2>
+
+          <p>
+            The
+            <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng"
+              >EU AI Act</a
+            >, adopted in 2024 is a step in the right direction... basically,
+            Article 13 requires high-risk systems to be transparent enough for
+            deployers to interpret their outputs and use them appropriately.
+            That is a real requirement, though it doesn't mean every model has
+            to expose a complete account of its internal reasoning. My question
+            is what that transparency looks like to the person affected. Does it
+            help them challenge a decision, or does it mostly help the
+            organization explain how it uses the software? Those are different
+            needs, and I'd want to know which one we're actually meeting.
+          </p>
+
+          <p>
+            On the research side, there are some things happening that I find
+            encouraging. Anthropic published work in 2024 using dictionary
+            learning and sparse feature extraction to locate how concepts are
+            represented inside Claude. They showed you could find actual
+            human-understandable features in a large model, things like a
+            "Golden Gate Bridge" feature and a "code bugs" feature, though the
+            technique is still hard to scale. DeepMind open-sourced
+            interpretability tooling with their Gemma Scope project. The
+            mechanistic interpretability community is still small, but it's
+            pulling in more and more people.
+          </p>
+
+          <p>
+            Finally, (updated from the original post) Dario Amodei, the CEO of
+            Anthropic, published an essay called "The Urgency of
+            Interpretability" in 2025 making essentially the same argument I've
+            been trying to make here, that we're in a race between understanding
+            these models and building more powerful ones, and that the window to
+            get interpretability right is closing. He's more optimistic than I
+            am about recent progress on circuits, and he puts a concrete
+            timeline on it (Anthropic is aiming for "interpretability can
+            reliably detect most model problems" by 2027). It was a strange
+            thing to read, partly because it's validating to see someone with
+            his vantage point say out loud what a lot of us have been circling
+            around, and partly because if he's worried, that tells you something
+            about how close the deadline actually is.
+          </p>
+
+          <p>
+            The thing I keep landing on is that all of this research is still
+            early, and meanwhile we're deploying frontier models into sensitive
+            domains at full speed.
+          </p>
+
+          <h2>what I think</h2>
+
+          <p>
+            I'm a student, and I don't have a perfect fix for this, but writing
+            the op-ed helped me get clearer about what I'd actually want to
+            change.
+          </p>
+
+          <p>
+            For high-stakes decisions, I think we should try interpretable
+            models first and make a serious comparison before deciding we need a
+            black box. That won't settle every case because sometimes a more
+            complex model may offer benefits that are hard to give up. But "it's
+            more accurate" should come with evidence for the task at hand,
+            including where it fails.
+          </p>
+
+          <p>
+            We also need to be more honest about what post-hoc tools give us. A
+            SHAP plot or saliency map can help someone investigate a model, but
+            it doesn't automatically explain everything that matters about a
+            decision. I'd want to know whether the explanation is reliable
+            enough for the thing we're asking someone to do with it for example,
+            a researcher debugging a model and a patient trying to understand a
+            recommendation need totally different things.
+          </p>
+
+          <p>
+            Also mechanistic interpretability needs more funding and more
+            people. The researchers trying to reverse-engineer what neural
+            networks actually compute internally, figuring out the algorithms
+            the weights encode, are doing work that matters a lot. But it's
+            still a small community given how massive the problem is, and the
+            distance between where we are and where we'd need to be to actually
+            understand a frontier model is huge.
+          </p>
+
+          <p>
+            The part I pushed harder on in the op-ed is that better research
+            won't fix the incentives by itself. If a hospital or a court uses a
+            system, someone there needs to be responsible for questioning its
+            output and correcting mistakes. The people affected need a way to
+            ask for that review. And the rules need to make those
+            responsibilities part of using the system, rather than something an
+            organization can promise to sort out later. Otherwise we can get
+            much better at explaining models without making it much easier to
+            challenge their decisions.
+          </p>
+
+          <p>
+            If you're in CS and early in your career like me, I think this is
+            worth thinking about before you ship something. Who has to live with
+            the answer your software gives? If it's wrong, who can they talk to,
+            and can that person actually do anything about it?
+          </p>
+
+          <p>
+            Also if you are reading in the future check in where we are at with
+            all of this, I hope that the stuff I am talking about has more eyes
+            on it.
+          </p>
+
+          <div class="references">
+            <h2>references</h2>
+            <ol>
+              <li>
+                Rudin, C. (2019). Stop explaining black box machine learning
+                models for high stakes decisions and use interpretable models
+                instead. <em>Nature Machine Intelligence</em>, 1, 206-215.
+              </li>
+              <li>
+                Budhkar, A., Song, Q., Su, J. & Zhang, X. (2025). Demystifying
+                the black box: A survey on explainable artificial intelligence
+                (XAI) in bioinformatics.
+                <em>Computational and Structural Biotechnology Journal</em>, 27,
+                346-359.
+              </li>
+              <li>
+                Prince, S. & Savulescu, J. (2025). When is black-box AI
+                justifiable to use in healthcare? <em>Big Data & Society</em>.
+              </li>
+              <li>
+                <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng"
+                  >Regulation (EU) 2024/1689</a
+                >, Article 13.
+              </li>
+              <li>
+                <a
+                  href="https://www.wicourts.gov/sc/opinion/DisplayDocument.pdf?content=pdf&amp;seqNo=171690"
+                  >State v. Loomis</a
+                >, 2016 WI 68.
+              </li>
+              <li>
+                Kamhoua, G. et al. (2025). From Black Box to Glass Box: A
+                Practical Review of Explainable Artificial Intelligence.
+                <em>AI</em>, 6(11), 285.
+              </li>
+              <li>
+                Hassan, R. et al. (2025). Unlocking the black box: Enhancing
+                human-AI collaboration in high-stakes healthcare.
+                <em>Technological Forecasting and Social Change</em>.
+              </li>
+              <li>
+                Amodei, D. (2025). The Urgency of Interpretability.
+                <em>darioamodei.com</em>.
+              </li>
+            </ol>
+          </div>
+        </article>
+      </main>
+
+      <footer class="meta">
+        <p><a href="../index.html">← back home</a></p>
+      </footer>
     </div>
-  </nav>
-
-  <main>
-    <header class="post-header">
-      <h1>We Don't Know What Our AI Is Doing</h1>
-      <div class="meta">
-        <span>mar 2026</span>
-        <span>opinion</span>
-        <span>~8 min read</span>
-      </div>
-    </header>
-
-    <article class="post">
-
-  <p>I've been thinking about this a lot lately and wanted to look more into it. We are putting AI systems into hospitals, courtrooms, hiring pipelines, and a bunch of other places where the output actually changes someone's life. But with some of these models, getting an answer is a lot easier than understanding why we got it. We know how we trained them and can inspect the calculations. That doesn't mean we can give someone a useful, reliable account of why a particular decision went against them. Even asking a reasoning model to explain itself doesn't guarantee that the explanation reflects how it reached its answer. I find that pretty alarming.</p>
-
-  <p>This is what gets called the black box problem. I read a bunch of the literature on it in class last year and wrote an op-ed about it. Coming back to it, the question that bothers me most is pretty simple: if a system makes a decision about you, what can you actually do when you think it's wrong? It's easy to talk about transparency as an engineering problem. It's harder to imagine being the person stuck asking for an explanation nobody can give you.</p>
-
-  <h2>the accuracy thing</h2>
-
-  <p>The standard defense of black-box models is that they perform better, and to be fair that's often true. Deep neural networks regularly outperform simpler models on most benchmarks. In medical imaging specifically, there's been work showing black-box models matching or beating clinician-level accuracy on mammogram screening, skin cancer classification, diabetic retinopathy detection, and a few other things (Prince and Savulescu cover this well in their 2025 paper). I don't want to wave that away because it's impressive and it matters and it's such a huge step in the right direction.</p>
-
-  <p>But here's where I always get stuck. Accuracy on a held-out test set and trustworthiness in the real world are really different things, and we talk about them like they're interchangeable when they're not. A model can score 97% on your evaluation metrics and still be latching onto some spurious correlation in the training data, or encoding a bias that nobody thought to check for, or arriving at the right answer for a completely wrong reason. The whole problem with a black box is that you can't open it up and look, so you do not know which of those scenarios you're in. You're just looking at the accuracy number on a dashboard and calling it good enough, which feels like a strange amount of trust to place in something you fundamentally do not understand.</p>
-
-  <div class="callout">
-    Rudin made this point in 2019: if an explanation of a black box were actually complete and faithful to what the model does internally, it would just be the model. You wouldn't need the black box. The very fact that you need a separate explanation tells you it's an approximation, and approximations can be wrong in ways you won't catch.
-  </div>
-
-  <h2>explaining versus understanding</h2>
-
-  <p>Cynthia Rudin published this paper in Nature Machine Intelligence in 2019 called "Stop Explaining Black Box Machine Learning Models for High Stakes Decisions and Use Interpretable Models Instead," which, credit to her, is about as clear a title as you'll ever see on an academic paper. We read it in my KBAI course and it stuck with me more than most things I've read in school.</p>
-
-  <p>Her central point is that there's a real difference between explainability and interpretability, and the field has been pouring energy into the wrong one. Explainability is what you get when you build a black-box model and then use a second tool (something like LIME or SHAP or a saliency map) to try to approximate what the first model did after the fact. Those tools are useful for debugging and building intuition about model behavior, and I don't think anyone should stop using them. But they are approximations. They're a second model's best guess about what the first model was doing, and that guess will always be incomplete because if it weren't, you'd just use the explanation instead of the original model.</p>
-
-  <p>Interpretability is what you get when the model itself is designed so that a human can follow its reasoning directly. Rudin's argument is that for high-stakes decisions, we should default to interpretable models and only reach for black boxes when we can show that interpretable approaches can't do the job. She's also demonstrated in multiple domains that when researchers actually try to build competitive interpretable models, they often come surprisingly close to black-box performance. That complicates the whole story that opacity is just the price you pay for accuracy.</p>
-
-  <p>The problem is that building something people can understand takes work, and a better benchmark score is much easier to show off. I don't think every company ignores transparency. But if the reward is for shipping a more capable model before everyone else, I don't see why we'd expect understanding it to get the same attention. Someone has to pay for that work and make it part of deciding whether a system is ready to use.</p>
-
-  <h2>where this can be a problem</h2>
-
-  <p>The example I used in my op-ed was Eric Loomis. His sentencing judge considered a COMPAS risk assessment, and Loomis challenged the use of a score whose proprietary calculation he couldn't inspect. In 2016, the Wisconsin Supreme Court upheld its use with limitations and cautions, emphasizing that other factors independently supported the sentence. So this wasn't an algorithm handing down a sentence on its own. It was a judge using information the person being sentenced couldn't fully examine. That distinction matters, but it doesn't make me much more comfortable. <a href="https://www.wicourts.gov/sc/opinion/DisplayDocument.pdf?content=pdf&amp;seqNo=171690">The court's opinion</a> is worth reading.</p>
-
-  <p>COMPAS also points to a distinction I blurred in the original version of this post. A system can be opaque because its workings are kept secret, because they're difficult to understand, or both. Those aren't exactly the same problem. But from the outside, you can still end up in the same frustrating position: someone is using a score to make a decision about you, and you can't meaningfully question how they got it.</p>
-
-  <p>Healthcare is the other domain where I find this really weird. I came across a paper from IU's own CS department at Luddy (Budhkar et al., 2025) that surveys explainability techniques in bioinformatics, and the honest conclusion is that we're still pretty far from having reliable tools for understanding what these models do in medical contexts. Black-box models are already being used in genomics and medical imaging, and the question of what happens when a model flags a patient as high-risk and the doctor can't interrogate why is not hypothetical anymore. Medicine requires so much context that a model can't have: a patient's living situation, their preferences, what they're actually willing to do about a diagnosis. If the doctor just follows the number because the accuracy metrics look good, we've effectively outsourced clinical judgment to a system nobody can look inside. I don't think that's what anyone wanted when they started working on AI in healthcare, but it's where we've ended up.</p>
-
-  <h2>regulation is trying (maybe not enough)</h2>
-
-  <p>The <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng">EU AI Act</a>, adopted in 2024, gives this discussion some teeth. Article 13 requires high-risk systems to be transparent enough for deployers to interpret their outputs and use them appropriately. That is a real requirement, though it doesn't mean every model has to expose a complete account of its internal reasoning. My question is what that transparency looks like to the person affected. Does it help them challenge a decision, or does it mostly help the organization explain how it uses the software? Those are different needs, and I'd want to know which one we're actually meeting.</p>
-
-  <p>On the research side, there are some things happening that I find encouraging. Anthropic published work in 2024 using dictionary learning and sparse feature extraction to locate how concepts are represented inside Claude. They showed you could find actual human-understandable features in a large model, things like a "Golden Gate Bridge" feature and a "code bugs" feature, though the technique is still hard to scale. DeepMind open-sourced interpretability tooling with their Gemma Scope project. The mechanistic interpretability community is still small, but it's pulling in serious people.</p>
-
-  <p>Finally, Dario Amodei, the CEO of Anthropic, published an essay called "The Urgency of Interpretability" in 2025 making essentially the same argument I've been trying to make here, that we're in a race between understanding these models and building more powerful ones, and that the window to get interpretability right is closing. He's more optimistic than I am about recent progress on circuits, and he puts a concrete timeline on it (Anthropic is aiming for "interpretability can reliably detect most model problems" by 2027). It was a strange thing to read, partly because it's validating to see someone with his vantage point say out loud what a lot of us have been circling around, and partly because if he's worried, that tells you something about how close the deadline actually is.</p>
-
-  <p>The thing I keep landing on is that all of this research is still early, and meanwhile we're deploying frontier models into sensitive domains at full speed.</p>
-
-  <h2>what I think</h2>
-
-  <p>I'm a student, and I don't have a neat fix for this. But writing the op-ed helped me get clearer about what I'd actually want to change.</p>
-
-  <p>For high-stakes decisions, I think we should try interpretable models first and make a serious comparison before deciding we need a black box. That won't settle every case. Sometimes a more complex model may offer benefits that are hard to give up. But "it's more accurate" should come with evidence for the task at hand, including where it fails. It shouldn't end the conversation.</p>
-
-  <p>We also need to be more honest about what post-hoc tools give us. A SHAP plot or saliency map can help someone investigate a model, but it doesn't automatically explain everything that matters about a decision. I'd want to know whether the explanation is reliable enough for the thing we're asking someone to do with it. A researcher debugging a model and a patient trying to understand a recommendation need different things.</p>
-
-  <p>And mechanistic interpretability needs more funding and more people. The researchers trying to reverse-engineer what neural networks actually compute internally, figuring out the algorithms the weights encode, are doing work that matters a lot. But it's still a small community given how massive the problem is, and the distance between where we are and where we'd need to be to actually understand a frontier model is huge.</p>
-
-  <p>The part I pushed harder on in the op-ed is that better research won't fix the incentives by itself. If a hospital or a court uses a system, someone there needs to be responsible for questioning its output and correcting mistakes. The people affected need a way to ask for that review. And the rules need to make those responsibilities part of using the system, rather than something an organization can promise to sort out later. Otherwise we can get much better at explaining models without making it much easier to challenge their decisions.</p>
-
-  <p>If you're in CS and early in your career like me, I think this is worth thinking about before you ship something. Who has to live with the answer your software gives? If it's wrong, who can they talk to, and can that person actually do anything about it? I still like building things. I just want us to spend more time on what happens to the people using them when they don't work.</p>
-
-  <div class="references">
-    <h2>references</h2>
-    <ol>
-      <li>Rudin, C. (2019). Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead. <em>Nature Machine Intelligence</em>, 1, 206-215.</li>
-      <li>Budhkar, A., Song, Q., Su, J. & Zhang, X. (2025). Demystifying the black box: A survey on explainable artificial intelligence (XAI) in bioinformatics. <em>Computational and Structural Biotechnology Journal</em>, 27, 346-359.</li>
-      <li>Prince, S. & Savulescu, J. (2025). When is black-box AI justifiable to use in healthcare? <em>Big Data & Society</em>.</li>
-      <li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng">Regulation (EU) 2024/1689</a>, Article 13.</li>
-      <li><a href="https://www.wicourts.gov/sc/opinion/DisplayDocument.pdf?content=pdf&amp;seqNo=171690">State v. Loomis</a>, 2016 WI 68.</li>
-      <li>Kamhoua, G. et al. (2025). From Black Box to Glass Box: A Practical Review of Explainable Artificial Intelligence. <em>AI</em>, 6(11), 285.</li>
-      <li>Hassan, R. et al. (2025). Unlocking the black box: Enhancing human-AI collaboration in high-stakes healthcare. <em>Technological Forecasting and Social Change</em>.</li>
-      <li>Amodei, D. (2025). The Urgency of Interpretability. <em>darioamodei.com</em>.</li>
-    </ol>
-  </div>
-
-</article>
-  </main>
-
-  <footer class="meta">
-    <p><a href="../index.html">← back home</a></p>
-  </footer>
-</div>
-</body>
+  </body>
 </html>
